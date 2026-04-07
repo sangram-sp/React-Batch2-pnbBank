@@ -11,7 +11,7 @@ const CallbackPage = () => {
       try {
         await handleCallback();
         console.log("Login successful!");
-        navigate('/'); // Redirect to Home
+        navigate('/dashboard'); // Redirect to Dashboard
       } catch (err) {
         console.error("Authentication failed:", err);
         navigate('/'); // Redirect home on error

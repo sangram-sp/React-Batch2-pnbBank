@@ -1,7 +1,9 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
-import CallbackPage from './pages/CallbackPage'; // Create this file if missing
+import CallbackPage from './pages/CallbackPage';
+import DashboardLayout from './components/layout/DashboardLayout';
+import Dashboard from './pages/Dashboard';
 import './App.css';
 
 function App() {
@@ -10,6 +12,15 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/redirected" element={<CallbackPage />} />
+        
+        {/* Dashboard Routes */}
+        <Route element={<DashboardLayout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          {/* Add more dashboard sub-routes here like /reports, /qr, etc later */}
+        </Route>
+        
+        {/* Redirect unknown routes */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
   );

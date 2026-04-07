@@ -1,0 +1,125 @@
+.dashboard-page {
+  display: flex;
+  flex-direction: column;
+}
+
+.page-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 24px;
+}
+
+.dashboard-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  background-color: #f7f9fa; /* Matches the slightly grey background behind controls */
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #eaedf1;
+}
+
+.vpa-id-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.vpa-label {
+  font-size: 14px;
+  color: #4a4a4a;
+  font-weight: 500;
+}
+
+.vpa-select {
+  padding: 6px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background-color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  outline: none;
+}
+
+.vpa-select:hover {
+  border-color: #9ca3af;
+}
+
+.filter-dropdown {
+  padding: 8px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background-color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  outline: none;
+}
+.filter-dropdown:hover {
+  border-color: #9ca3af;
+}
+
+.cards-container {
+  display: flex;
+  gap: 24px;
+}
+
+.metric-card {
+  flex: 1;
+  background-color: #ffffff;
+  border: 1px solid #eaedf1;
+  border-radius: 12px;
+  padding: 28px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+}
+
+.card-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-icon.transactions {
+  background-color: #eef2ff;
+  color: #6366f1;
+}
+
+.card-icon.amount {
+  background-color: #fdf2f8;
+  color: #db2777;
+}
+
+.card-label {
+  font-size: 15px;
+  font-weight: 500;
+  color: #4b5563;
+}
+
+.card-value {
+  font-size: 24px;
+  font-weight: 600;
+  color: #111827;
+}
