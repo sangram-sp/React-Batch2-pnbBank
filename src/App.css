@@ -1,0 +1,142 @@
+/* src/App.css */
+:root {
+  --pnb-maroon: #a01b44;
+  --pnb-yellow: #fbb017;
+  --text-gray: #6b7280;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, sans-serif;
+  background-color: #ffffff;
+  color: #111827;
+}
+
+/* Navbar: Center logo, Right button */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  padding: 15px 50px;
+  background: #a01b44;
+  border-bottom: 1px solid #f3f4f6;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav-logo {
+  height: 60px; /* Slightly larger as per image */
+}
+
+.nav-actions {
+  position: absolute;
+  right: 50px;
+}
+
+.btn-login {
+  background-color: #fbb017;
+  color: white;
+  padding: 8px 24px;
+  border: 2px solid #fbb017;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Hero Section (UserVisual) */
+.hero {
+  background-color: #e1ded9;
+  padding: 100px 20px;
+  text-align: center;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.hero h1 {
+  color: var(--pnb-maroon);
+  font-size: 64px; /* Large heading */
+  font-weight: 800;
+  margin-bottom: 24px;
+  letter-spacing: -1px;
+}
+
+.hero p {
+  color: var(--text-gray);
+  font-size: 22px;
+  line-height: 1.6;
+  max-width: 700px;
+  margin: 0 auto 48px;
+}
+
+.btn-get-started {
+  background-color: var(--pnb-yellow);
+  color: var(--pnb-maroon);
+  padding: 16px 48px;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(251, 176, 23, 0.4);
+  transition: all 0.2s ease;
+}
+
+.btn-get-started:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(251, 176, 23, 0.5);
+}
+
+.merchant-services {
+  background-color: #e0e1e3;
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.merchant-services h2 {
+  color: var(--pnb-maroon);
+  font-size: 32px;
+  margin-bottom: 60px;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.card {
+  background: white;
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease;
+}
+
+.card:hover { transform: translateY(-5px); }
+
+.icon-box {
+  background-color: #fff1f2;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  color: var(--pnb-maroon);
+}
+
+.card h3 { color: var(--pnb-maroon); margin-bottom: 12px; font-size: 18px; }
+.card p { color: var(--text-gray); font-size: 15px; line-height: 1.5; }
+
+.footer {
+  padding: 40px;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 14px;
+  border-top: 1px solid #f3f4f6;
+}

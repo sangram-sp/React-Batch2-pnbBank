@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Ensure the body takes full height and has no margin */
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
