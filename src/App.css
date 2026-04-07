@@ -47,7 +47,7 @@ body {
 
 /* Hero Section (UserVisual) */
 .hero {
-  background-color: #e1ded9;
+  background-color: white;
   padding: 100px 20px;
   text-align: center;
   max-width: 100%;
@@ -89,7 +89,7 @@ body {
 }
 
 .merchant-services {
-  background-color: #e0e1e3;
+  background-color: white;
   padding: 80px 20px;
   text-align: center;
 }

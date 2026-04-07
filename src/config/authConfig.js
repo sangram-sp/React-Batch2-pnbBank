@@ -1,4 +1,3 @@
-// src/config/authConfig.js
 
 const AUTH_CONFIG = {
     authorization_endpoint: 'https://pnb-auth-stage.isupay.in/application/o/authorize/',
@@ -9,8 +8,6 @@ const AUTH_CONFIG = {
     scope: 'path openid profile email offline_access authorities privileges user_name created adminName bankCode goauthentik.io/api',
     response_type: 'code',
 };
-
-// --- Helper Functions for Secure PKCE Login ---
 
 const generateRandom = (length) => {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
@@ -32,11 +29,6 @@ const base64urlencode = (arrayBuffer) => {
         .replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 };
 
-// --- Exported Auth Actions ---
-
-/**
- * Initiates the Login process with PKCE protection
- */
 export const login = async () => {
     try {
         const state = generateRandom(32);
@@ -65,9 +57,6 @@ export const login = async () => {
     }
 };
 
-/**
- * Handles the redirect from PNB and exchanges the code for a token
- */
 export const handleCallback = async () => {
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
@@ -112,9 +101,7 @@ export const getUser = () => {
     return user ? JSON.parse(user) : null;
 };
 
-/**
- * Clears session and logs out of PNB Auth
- */
+
 export const logout = () => {
     sessionStorage.clear();
     window.location.href = 'https://pnb-auth-stage.isupay.in/application/o/pnb/end-session/';
