@@ -18,7 +18,7 @@ const Dashboard = () => {
         const token = sessionStorage.getItem('access_token');
 
         // Extract mobile number from token user info (preferred_username or user_name)
-        const mobileNumber = user?.preferred_username || user?.user_name || '7574857003';
+        const mobileNumber = user?.preferred_username || user?.user_name;
 
         const payload = { mobile_number: mobileNumber };
 
@@ -75,6 +75,7 @@ const Dashboard = () => {
   const handleProceed = () => {
     if (selectedVpa) {
       setActiveVpa(selectedVpa);
+      sessionStorage.setItem('active_vpa', selectedVpa);
       setShowVpaModal(false);
     }
   };
@@ -93,7 +94,10 @@ const Dashboard = () => {
           <select
             className="vpa-select"
             value={activeVpa}
-            onChange={(e) => setActiveVpa(e.target.value)}
+            onChange={(e) => {
+              setActiveVpa(e.target.value);
+              sessionStorage.setItem('active_vpa', e.target.value);
+            }}
           >
             {vpas.map((vpa, idx) => (
               <option key={idx} value={vpa}>{vpa}</option>
@@ -103,8 +107,6 @@ const Dashboard = () => {
         <select className="filter-dropdown" defaultValue="Today">
           <option value="Today">Today</option>
           <option value="Yesterday">Yesterday</option>
-          <option value="ThisWeek">This Week</option>
-          <option value="ThisMonth">This Month</option>
         </select>
       </div>
 
