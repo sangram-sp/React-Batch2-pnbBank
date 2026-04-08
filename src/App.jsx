@@ -4,6 +4,7 @@ import LandingPage from './pages/LandingPage';
 import CallbackPage from './pages/CallbackPage';
 import DashboardLayout from './components/layout/DashboardLayout';
 import Dashboard from './pages/Dashboard';
+import LanguageUpdate from './pages/LanguageUpdate';
 import './App.css';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         {/* Dashboard Routes */}
         <Route element={<DashboardLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/language" element={<LanguageUpdate />} />
           {/* Add more dashboard sub-routes here like /reports, /qr, etc later */}
         </Route>
         
