@@ -2,6 +2,49 @@ import React, { useState, useEffect } from 'react';
 import { encryptBody, decryptResponse } from '../utils/crypto';
 import './LanguageUpdate.css';
 
+const fetchCurrentLanguageAPI = async (serialNumber, token) => {
+  try {
+    const langPayload = { serial_number: serialNumber };
+    const encryptedLangPayload = encryptBody(langPayload);
+
+    const langRes = await fetch(`https://auth-dev-stage.iserveu.online/pnb/isu_soundbox/user_api/current_language/${serialNumber}`, {
+      method: 'POST',
+      headers: {
+        'pass_key': 'QC62FQKXT2DQTO43LMWH5A44UKVPQ7LK5Y6HVHRQ3XTIKLDTB6HA',
+        'Content-Type': 'application/json',
+        'Authorization': token || ''
+      },
+      body: JSON.stringify({ RequestData: encryptedLangPayload })
+    });
+
+    let finalLangRes = langRes;
+    if (langRes.status === 405 || langRes.status === 400 || langRes.status === 404) {
+      finalLangRes = await fetch(`https://auth-dev-stage.iserveu.online/pnb/isu_soundbox/user_api/current_language/${serialNumber}`, {
+        method: 'GET',
+        headers: {
+          'pass_key': 'QC62FQKXT2DQTO43LMWH5A44UKVPQ7LK5Y6HVHRQ3XTIKLDTB6HA',
+          'Content-Type': 'application/json',
+          'Authorization': token || ''
+        }
+      });
+    }
+
+    if (finalLangRes.ok) {
+      const langJson = await finalLangRes.json();
+      if (langJson && langJson.ResponseData) {
+          const decryptedLang = decryptResponse(langJson.ResponseData);
+          return decryptedLang?.data?.language || decryptedLang?.data || decryptedLang?.language || 'English';
+      } else if (langJson && langJson.data) {
+          return langJson.data.language || langJson.data || 'English';
+      }
+    }
+    return 'Not Found';
+  } catch (err) {
+      console.error("Failed to fetch language data:", err);
+      return 'Error';
+  }
+};
+
 const LanguageUpdate = () => {
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
@@ -11,6 +54,8 @@ const LanguageUpdate = () => {
     languageUpdate: ''
   });
   const [errorMsg, setErrorMsg] = useState('');
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,53 +99,7 @@ const LanguageUpdate = () => {
         }
 
         // 2. Fetch Current Language
-        let fetchedLanguage = 'Loading...';
-        try {
-          // As per "encrypt this data", we supply a post payload if necessary,
-          // but we'll fulfill the provided cURL structure (GET fallback to POST)
-          const langPayload = { serial_number: serialNumber };
-          const encryptedLangPayload = encryptBody(langPayload);
-
-          const langRes = await fetch(`https://auth-dev-stage.iserveu.online/pnb/isu_soundbox/user_api/current_language/${serialNumber}`, {
-            method: 'POST', // Falling back to POST with RequestData as typical for this API suite
-            headers: {
-              'pass_key': 'QC62FQKXT2DQTO43LMWH5A44UKVPQ7LK5Y6HVHRQ3XTIKLDTB6HA',
-              'Content-Type': 'application/json',
-              'Authorization': token || ''
-            },
-            body: JSON.stringify({ RequestData: encryptedLangPayload })
-          });
-
-          // If the server explicitly wanted GET as written in curl, let's gracefully attempt standard GET fallback
-          let finalLangRes = langRes;
-          if (langRes.status === 405 || langRes.status === 400 || langRes.status === 404) {
-            finalLangRes = await fetch(`https://auth-dev-stage.iserveu.online/pnb/isu_soundbox/user_api/current_language/${serialNumber}`, {
-              method: 'GET',
-              headers: {
-                'pass_key': 'QC62FQKXT2DQTO43LMWH5A44UKVPQ7LK5Y6HVHRQ3XTIKLDTB6HA',
-                'Content-Type': 'application/json',
-                'Authorization': token || ''
-              }
-            });
-          }
-
-          if (finalLangRes.ok) {
-            const langJson = await finalLangRes.json();
-            if (langJson && langJson.ResponseData) {
-               const decryptedLang = decryptResponse(langJson.ResponseData);
-               // Identify language struct
-               fetchedLanguage = decryptedLang?.data?.language || decryptedLang?.data || decryptedLang?.language || 'English';
-            } else if (langJson && langJson.data) {
-               // Assuming unencrypted fallback
-               fetchedLanguage = langJson.data.language || langJson.data || 'English';
-            }
-          } else {
-             fetchedLanguage = 'Not Found';
-          }
-        } catch (err) {
-           console.error("Failed to fetch language data:", err);
-           fetchedLanguage = 'Error';
-        }
+        const fetchedLanguage = await fetchCurrentLanguageAPI(serialNumber, token);
 
         setFormData({
           vpaId: vpaId,
@@ -120,9 +119,43 @@ const LanguageUpdate = () => {
     fetchData();
   }, []);
 
-  const handleUpdate = () => {
-     // Handle the payload to trigger the update here later!
-     console.log("Trigger update for language: " + formData.languageUpdate);
+  const handleUpdate = async () => {
+    try {
+      setUpdating(true);
+      setErrorMsg('');
+
+      const payload = {
+        tid: formData.serialNumber,
+        update_language: formData.languageUpdate.toUpperCase()
+      };
+
+      const response = await fetch('https://api-dev-stage.iserveu.online/pnb/bank/lang/update_language', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update language');
+      }
+
+      // Wait briefly for DB consistency, then refetch
+      setFormData(prev => ({...prev, currentLanguage: 'Updating...'}));
+      const token = sessionStorage.getItem('access_token');
+      
+      await new Promise(resolve => setTimeout(resolve, 800));
+      const updatedLang = await fetchCurrentLanguageAPI(formData.serialNumber, token);
+      
+      setFormData(prev => ({...prev, currentLanguage: updatedLang, languageUpdate: ''}));
+      setShowSuccessModal(true);
+    } catch (err) {
+      console.error(err);
+      setErrorMsg(err.message);
+    } finally {
+      setUpdating(false);
+    }
   };
 
   if (loading) {
@@ -161,18 +194,45 @@ const LanguageUpdate = () => {
                 className="select-input"
               >
                 <option value="">Select Language Update</option>
-                <option value="English">English</option>
-                <option value="Hindi">Hindi</option>
                 <option value="Odia">Odia</option>
                 <option value="Tamil">Tamil</option>
+                <option value="Bengali">Bengali</option>
                 <option value="Telugu">Telugu</option>
+                <option value="Marathi">Marathi</option>
+                <option value="English">English</option>
+                <option value="Gujarati">Gujarati</option>
+                <option value="Assamese">Assamese</option>
+                <option value="Punjabi">Punjabi</option>
+                <option value="Malayalam">Malayalam</option>
+                <option value="Kannada">Kannada</option>
+                <option value="Hindi">Hindi</option>
               </select>
             </div>
           </div>
 
           <div className="form-actions">
-            <button className="btn-cancel">Cancel</button>
-            <button className="btn-update" onClick={handleUpdate} disabled={!formData.languageUpdate}>Update</button>
+            <button className="btn-cancel" onClick={() => setFormData({...formData, languageUpdate: ''})}>Cancel</button>
+            <button className="btn-update" onClick={handleUpdate} disabled={!formData.languageUpdate || updating}>
+              {updating ? 'Updating...' : 'Update'}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showSuccessModal && (
+        <div className="success-modal-overlay">
+          <div className="success-modal-content">
+            <div className="success-modal-title">
+              Language update request<br/>Initiated Successfully
+            </div>
+            <div className="success-icon-container">
+              <div className="success-icon-circle">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+            </div>
+            <button className="btn-modal-close" onClick={() => setShowSuccessModal(false)}>Close</button>
           </div>
         </div>
       )}
