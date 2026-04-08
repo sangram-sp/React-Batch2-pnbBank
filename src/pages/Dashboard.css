@@ -64,6 +64,131 @@
   border-color: #9ca3af;
 }
 
+/* Modal Styling */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+}
+
+.modal-content {
+  background: #ffffff;
+  width: 440px;
+  border-radius: 4px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  padding: 18px 24px;
+  border-bottom: 1px solid #eaedf1;
+  font-weight: 600;
+  font-size: 15px;
+  color: #1a1a1a;
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+.modal-subtitle {
+  font-size: 12px;
+  color: #1a1a1a;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.vpa-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.vpa-option {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  border: 1px solid #eaedf1;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.vpa-option:hover, .vpa-option.selected {
+  border-color: #a01b44;
+}
+
+.vpa-option input[type="radio"] {
+  accent-color: #a01b44;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.vpa-option-label {
+  font-size: 13px;
+  color: #374151;
+  font-weight: 500;
+}
+
+.modal-footer {
+  padding: 16px 24px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.btn-cancel {
+  background: transparent;
+  border: none;
+  color: #e51d45;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px 16px;
+}
+
+.btn-proceed {
+  background: #a01b44;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 24px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-proceed:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+}
+
+.btn-proceed:hover:not(:disabled) {
+  background: #8e153a;
+}
+
+.loading-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 18px;
+  color: #4a4a4a;
+  font-weight: 500;
+}
+
 .cards-container {
   display: flex;
   gap: 24px;
