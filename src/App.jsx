@@ -6,6 +6,7 @@ import DashboardLayout from './components/layout/DashboardLayout';
 import Dashboard from './pages/Dashboard';
 import LanguageUpdate from './pages/LanguageUpdate';
 import QRDetails from './pages/QRDetails';
+import TransactionReports from './pages/TransactionReports';
 import './App.css';
 
 function App() {
@@ -20,7 +21,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/language" element={<LanguageUpdate />} />
           <Route path="/qr" element={<QRDetails />} />
-          {/* Add more dashboard sub-routes here like /reports, etc later */}
+          <Route path="/reports" element={<TransactionReports />} />
         </Route>
         
         {/* Redirect unknown routes */}
