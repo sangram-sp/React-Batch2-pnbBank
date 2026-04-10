@@ -5,6 +5,7 @@ import CallbackPage from './pages/CallbackPage';
 import DashboardLayout from './components/layout/DashboardLayout';
 import Dashboard from './pages/Dashboard';
 import LanguageUpdate from './pages/LanguageUpdate';
+import QRDetails from './pages/QRDetails';
 import './App.css';
 
 function App() {
@@ -18,7 +19,8 @@ function App() {
         <Route element={<DashboardLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/language" element={<LanguageUpdate />} />
-          {/* Add more dashboard sub-routes here like /reports, /qr, etc later */}
+          <Route path="/qr" element={<QRDetails />} />
+          {/* Add more dashboard sub-routes here like /reports, etc later */}
         </Route>
         
         {/* Redirect unknown routes */}
