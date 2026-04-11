@@ -12,38 +12,7 @@ body {
   color: #111827;
 }
 
-/* Navbar: Center logo, Right button */
-.navbar {
-  display: flex;
-  align-items: center;
-  justify-content: left;
-  padding: 15px 50px;
-  background: #a01b44;
-  border-bottom: 1px solid #f3f4f6;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-}
 
-.nav-logo {
-  height: 60px; /* Slightly larger as per image */
-}
-
-.nav-actions {
-  position: absolute;
-  right: 50px;
-}
-
-.btn-login {
-  background-color: #fbb017;
-  color: white;
-  padding: 8px 24px;
-  border: 2px solid #fbb017;
-  border-radius: 6px;
-  font-weight: 700;
-  cursor: pointer;
-  font-size: 14px;
-}
 
 /* Hero Section (UserVisual) */
 .hero {
