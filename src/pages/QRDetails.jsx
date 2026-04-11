@@ -13,11 +13,11 @@ const QRDetails = () => {
     vpaId: ''
   });
   const [errorMsg, setErrorMsg] = useState('');
-  
+
   const [amountInput, setAmountInput] = useState('');
   const [activeDynamicAmount, setActiveDynamicAmount] = useState('');
-  const [timerSeconds, setTimerSeconds] = useState(180);
-  
+  const [timerSeconds, setTimerSeconds] = useState(90);
+
   const qrCardRef = useRef(null);
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const QRDetails = () => {
 
         const decryptedProfile = decryptResponse(profileJson.ResponseData);
         let profile = null;
-        
+
         if (decryptedProfile && decryptedProfile.status === 0 && Array.isArray(decryptedProfile.data) && decryptedProfile.data.length > 0) {
           profile = decryptedProfile.data[0];
         }
@@ -82,20 +82,20 @@ const QRDetails = () => {
     let interval = null;
     if (qrType === 'Dynamic' && activeDynamicAmount && timerSeconds > 0) {
       interval = setInterval(() => {
-         setTimerSeconds((prev) => prev - 1);
+        setTimerSeconds((prev) => prev - 1);
       }, 1000);
     } else if (timerSeconds <= 0 && activeDynamicAmount) {
-       setActiveDynamicAmount(''); // Reset when timer expires
-       setAmountInput('');
+      setActiveDynamicAmount(''); // Reset when timer expires
+      setAmountInput('');
     }
     return () => clearInterval(interval);
   }, [qrType, activeDynamicAmount, timerSeconds]);
 
   const handleGenerateDynamic = () => {
-     if (amountInput && !isNaN(amountInput) && Number(amountInput) > 0) {
-        setActiveDynamicAmount(amountInput);
-        setTimerSeconds(180);
-     }
+    if (amountInput && !isNaN(amountInput) && Number(amountInput) > 0) {
+      setActiveDynamicAmount(amountInput);
+      setTimerSeconds(90);
+    }
   };
 
   const formatTime = (seconds) => {
@@ -116,26 +116,26 @@ const QRDetails = () => {
   };
 
   const handleDownloadQR = async () => {
-     if (!qrCardRef.current) return;
-     try {
-       const dataUrl = await htmlToImage.toPng(qrCardRef.current, { backgroundColor: '#ffffff', pixelRatio: 2 });
-       const link = document.createElement('a');
-       link.download = `QR_${details.vpaId}.png`;
-       link.href = dataUrl;
-       link.click();
-     } catch (err) {
-       console.error("Failed to generate QR screenshot:", err);
-     }
+    if (!qrCardRef.current) return;
+    try {
+      const dataUrl = await htmlToImage.toPng(qrCardRef.current, { backgroundColor: '#ffffff', pixelRatio: 2 });
+      const link = document.createElement('a');
+      link.download = `QR_${details.vpaId}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error("Failed to generate QR screenshot:", err);
+    }
   };
 
   if (loading) {
-     return <div className="loading-state">Loading QR Details...</div>;
+    return <div className="loading-state">Loading QR Details...</div>;
   }
 
   return (
     <div className="qr-details-page">
       <h1 className="page-title">QR Details</h1>
-      
+
       {errorMsg ? (
         <div className="error-message">{errorMsg}</div>
       ) : (
@@ -143,101 +143,101 @@ const QRDetails = () => {
           <div className="qr-type-selector">
             <div className="selector-title">Select The type of QR</div>
             <div className="radio-group">
-               <label className={`radio-option ${qrType === 'Static' ? 'selected' : ''}`}>
-                 <input 
-                   type="radio" 
-                   value="Static" 
-                   checked={qrType === 'Static'} 
-                   onChange={() => {
-                     setQrType('Static');
-                     setActiveDynamicAmount('');
-                     setAmountInput('');
-                   }} 
-                 />
-                 <span>Static</span>
-               </label>
-               <label className={`radio-option ${qrType === 'Dynamic' ? 'selected' : ''}`}>
-                 <input 
-                   type="radio" 
-                   value="Dynamic" 
-                   checked={qrType === 'Dynamic'} 
-                   onChange={() => setQrType('Dynamic')} 
-                 />
-                 <span>Dynamic</span>
-               </label>
+              <label className={`radio-option ${qrType === 'Static' ? 'selected' : ''}`}>
+                <input
+                  type="radio"
+                  value="Static"
+                  checked={qrType === 'Static'}
+                  onChange={() => {
+                    setQrType('Static');
+                    setActiveDynamicAmount('');
+                    setAmountInput('');
+                  }}
+                />
+                <span>Static</span>
+              </label>
+              <label className={`radio-option ${qrType === 'Dynamic' ? 'selected' : ''}`}>
+                <input
+                  type="radio"
+                  value="Dynamic"
+                  checked={qrType === 'Dynamic'}
+                  onChange={() => setQrType('Dynamic')}
+                />
+                <span>Dynamic</span>
+              </label>
             </div>
 
             {qrType === 'Dynamic' && (
               <div className="dynamic-inputs-section">
-                 <div className="dynamic-info">Enter an amount to instantly generate your dynamic QR code</div>
-                 <div className="dynamic-input-label">Amount to be collected</div>
-                 <div className="amount-input-group">
-                    <input 
-                      type="text" 
-                      value={amountInput} 
-                      onChange={(e) => setAmountInput(e.target.value)} 
-                      placeholder="Enter Amount" 
-                    />
-                    <button onClick={handleGenerateDynamic} disabled={!amountInput}>Generate QR</button>
-                 </div>
+                <div className="dynamic-info">Enter an amount to instantly generate your dynamic QR code</div>
+                <div className="dynamic-input-label">Amount to be collected</div>
+                <div className="amount-input-group">
+                  <input
+                    type="text"
+                    value={amountInput}
+                    onChange={(e) => setAmountInput(e.target.value)}
+                    placeholder="Enter Amount"
+                  />
+                  <button onClick={handleGenerateDynamic} disabled={!amountInput}>Generate QR</button>
+                </div>
               </div>
             )}
           </div>
 
           {(qrType === 'Static' || (qrType === 'Dynamic' && activeDynamicAmount)) && (
-          <div className="qr-display-card-container">
-             <div className="qr-printable-area" ref={qrCardRef}>
+            <div className="qr-display-card-container">
+              <div className="qr-printable-area" ref={qrCardRef}>
                 {qrType === 'Static' ? (
                   <div className="qr-header-logo">
-                     <div className="pnb-logo-box">
-                        <span>pnb</span>
-                     </div>
-                     <div className="qr-top-vpa">UPI ID : {details.vpaId}</div>
+                    <div className="pnb-logo-box">
+                      <span>pnb</span>
+                    </div>
+                    <div className="qr-top-vpa">UPI ID : {details.vpaId}</div>
                   </div>
                 ) : (
                   <div className="dynamic-qr-header">
-                     <div className="dynamic-amt-label">Amount to be Collected</div>
-                     <div className="dynamic-amt-value">₹ {activeDynamicAmount}</div>
+                    <div className="dynamic-amt-label">Amount to be Collected</div>
+                    <div className="dynamic-amt-value">₹ {activeDynamicAmount}</div>
                   </div>
                 )}
 
                 <div className="merchant-name-plate">
-                   <div className="merchant-avatar">
-                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                   </div>
-                   <span>{details.merchantName.toUpperCase()}</span>
+                  <div className="merchant-avatar">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                  </div>
+                  <span>{details.merchantName.toUpperCase()}</span>
                 </div>
 
                 <div className="qr-code-wrapper">
-                    {details.qrString ? (
-                        <QRCodeSVG value={getDisplayQrString()} size={240} level={"M"} />
-                    ) : (
-                        <div className="no-qr">No QR string available</div>
-                    )}
+                  {details.qrString ? (
+                    <QRCodeSVG value={getDisplayQrString()} size={240} level={"M"} />
+                  ) : (
+                    <div className="no-qr">No QR string available</div>
+                  )}
                 </div>
 
                 <div className="qr-bottom-vpa">UPI ID : {details.vpaId}</div>
-                
-                {qrType === 'Dynamic' && (
-                   <div className="dynamic-timer">
-                      Valid till {formatTime(timerSeconds)}
-                   </div>
-                )}
-                
-                <div className="qr-branding">
-                   <div className="powered-by">POWERED BY</div>
-                   <div className="upi-logo-text">
-                     <span className="upi-u">U</span><span className="upi-p">P</span><span className="upi-i">I</span>
-                   </div>
-                </div>
-             </div>
 
-             {qrType === 'Static' && (
-               <div className="button-boundary">
-                 <button className="btn-download-qr" onClick={handleDownloadQR}>Download QR Code</button>
-               </div>
-             )}
-          </div>
+                {qrType === 'Dynamic' && (
+                  <div className="dynamic-timer">
+                    Valid till {formatTime(timerSeconds)}
+                  </div>
+                )}
+
+                <div className="qr-branding">
+                  <div className="powered-by">POWERED BY</div>
+                  <div className="upi-logo-text">
+                    <span className="upi-u">U</span><span className="upi-p">P</span><span className="upi-i">I</span>
+                  </div>
+                </div>
+              </div>
+
+              {qrType === 'Static' && (
+                <div className="button-boundary">
+                  <button className="btn-download-qr" onClick={handleDownloadQR}>Download QR Code</button>
+                </div>
+              )}
+            </div>
           )}
         </div>
       )}
