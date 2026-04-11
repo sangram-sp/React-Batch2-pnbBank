@@ -17,22 +17,21 @@ const Dashboard = () => {
         const user = getUser();
         const token = sessionStorage.getItem('access_token');
 
-        // Extract mobile number from token user info (preferred_username or user_name)
+        // Extract mobile number from token user info
         const mobileNumber = user?.preferred_username || user?.user_name;
 
         const payload = { mobile_number: mobileNumber };
 
-        // Encrypt the payload using crypto.js
         const encryptedPayload = encryptBody(payload);
 
         const response = await fetch('https://auth-dev-stage.iserveu.online/pnb/fetch/fetchById', {
           method: 'POST',
           headers: {
             'pass_key': 'QC62FQKXT2DQTO43LMWH5A44UKVPQ7LK5Y6HVHRQ3XTIKLDTB6HA',
-            'Content-Type': 'application/json', // Keeping the Content-Type from original cURL
+            'Content-Type': 'application/json',
             'Authorization': token || ''
           },
-          body: JSON.stringify({ RequestData: encryptedPayload }) // Post the request in encrypted format inside an object
+          body: JSON.stringify({ RequestData: encryptedPayload })
         });
 
         if (!response.ok) {
@@ -45,7 +44,7 @@ const Dashboard = () => {
           throw new Error('Response did not contain ResponseData field');
         }
 
-        // Decrypt exclusively the value
+        // Decrypt the value
         const decryptedData = decryptResponse(jsonResponse.ResponseData);
 
         // Check for success and map 'vpa_id' from the data array

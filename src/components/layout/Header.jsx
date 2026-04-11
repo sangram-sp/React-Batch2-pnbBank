@@ -72,7 +72,7 @@ const Header = () => {
       }
     } catch (error) {
       console.error('Error fetching profile:', error);
-      setProfileData(null); // Ensure data remains purely network-driven
+      setProfileData(null);
     } finally {
       setIsLoadingProfile(false);
     }
@@ -94,7 +94,7 @@ const Header = () => {
         <div className="profile-container" ref={profileRef}>
           <div className="user-profile" onClick={() => setIsProfileOpen(!isProfileOpen)}>
             <div className="user-avatar">
-              <img src={`https://i.pravatar.cc/150?u=${userName}`} alt={userName} />
+              <img src={`https://i.pravatar.cc/151?c=${userName}`} alt={userName} />
             </div>
             <span>{userName}</span>
           </div>

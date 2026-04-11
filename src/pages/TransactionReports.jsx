@@ -6,6 +6,7 @@ const TransactionReports = () => {
   const [filterType, setFilterType] = useState('Custom Range');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [monthlyFilter, setMonthlyFilter] = useState('1');
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
@@ -38,7 +39,6 @@ const TransactionReports = () => {
   };
 
   const formatDisplayDate = (apiDateStr) => {
-    // Basic fallback formatter
     if (!apiDateStr) return '';
     return apiDateStr;
   };
@@ -74,7 +74,6 @@ const TransactionReports = () => {
 
       const data = await response.json();
 
-      // Attempt to parse the response, making it robust against different shapes
       let reports = [];
       if (data.data && Array.isArray(data.data)) {
         reports = data.data;
@@ -85,7 +84,7 @@ const TransactionReports = () => {
       }
 
       setTransactions(reports);
-      setCurrentPage(1); // Reset page on new fetch
+      setCurrentPage(1);
     } catch (err) {
       console.error(err);
       setErrorMsg(err.message || 'An error occurred while fetching reports.');
@@ -102,19 +101,20 @@ const TransactionReports = () => {
         return;
       }
       fetchReports(startDate, endDate);
+    } else if (filterType === 'Monthly') {
+      const selectedMonthsBack = parseInt(monthlyFilter);
+      const d = new Date();
+      d.setMonth(d.getMonth() - selectedMonthsBack);
+      const start = d.toISOString().split('T')[0];
+      const end = getTodayString();
+      fetchReports(start, end);
     }
-    // Logic for other filters like Today / Monthly can be added here
   };
 
   useEffect(() => {
     if (filterType === 'Today') {
       const today = getTodayString();
       fetchReports(today, today);
-    } else if (filterType === 'Monthly') {
-      const date = new Date();
-      const firstDay = new Date(date.getFullYear(), date.getMonth(), 1).toISOString().split('T')[0];
-      const today = getTodayString();
-      fetchReports(firstDay, today);
     }
   }, [filterType]);
 
@@ -122,7 +122,7 @@ const TransactionReports = () => {
   const today = getTodayString();
   const minEndDate = getNextDayString(startDate);
 
-  // Pagination Logic
+  // Pagination
   const totalPages = Math.ceil(transactions.length / rowsPerPage);
   const currentData = transactions.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
 
@@ -176,6 +176,34 @@ const TransactionReports = () => {
             </label>
           </div>
 
+          {filterType === 'Monthly' && (
+            <form className="date-picker-section" onSubmit={handleSubmit}>
+              <div className="date-input-group">
+                <label>Monthly</label>
+                <select
+                  value={monthlyFilter}
+                  onChange={(e) => setMonthlyFilter(e.target.value)}
+                  style={{
+                    padding: '10px 12px',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '6px',
+                    fontSize: '14px',
+                    outline: 'none',
+                    minWidth: '200px'
+                  }}
+                >
+                  <option value="1">Last Month's Report</option>
+                  <option value="3">Last 3 month's Report</option>
+                  <option value="6">Last 6 month's Report</option>
+                  <option value="12">Last 12 month's Report</option>
+                </select>
+              </div>
+              <button type="submit" className="submit-btn" disabled={loading} style={{ alignSelf: 'flex-end', marginBottom: '2px' }}>
+                {loading ? 'Submitting...' : 'Submit'}
+              </button>
+            </form>
+          )}
+
           {filterType === 'Custom Range' && (
             <form className="date-picker-section" onSubmit={handleSubmit}>
               <div className="date-input-group">
@@ -203,7 +231,7 @@ const TransactionReports = () => {
                   onChange={(e) => setEndDate(e.target.value)}
                 />
               </div>
-              <button type="submit" className="submit-btn" disabled={loading}>
+              <button type="submit" className="submit-btn" disabled={loading} style={{ alignSelf: 'flex-end', marginBottom: '2px' }}>
                 {loading ? 'Submitting...' : 'Submit'}
               </button>
             </form>

@@ -3,10 +3,6 @@ import CryptoJS from 'crypto-js';
 // The provided 32-byte encryption key (Base64 encoded)
 const ENCRYPTION_KEY_B64 = 'a6T8tOCYiSzDTrcqPvCbJfy0wSQOVcfaevH0gtwCtoU=';
 
-/**
- * Encrypts the request body using AES-256-CBC.
- * Generates a random 16-byte IV and prepends it to the result, then Base64 encodes them together.
- */
 export const encryptBody = (data) => {
     try {
         const text = typeof data === 'object' ? JSON.stringify(data) : String(data);
@@ -47,7 +43,7 @@ export const decryptResponse = (encryptedBase64) => {
 
         // The IV is the first 16 bytes (4 words in a WordArray)
         const iv = CryptoJS.lib.WordArray.create(combined.words.slice(0, 4), 16);
-        
+
         // The ciphertext is the remainder
         const ciphertext = CryptoJS.lib.WordArray.create(combined.words.slice(4), combined.sigBytes - 16);
 

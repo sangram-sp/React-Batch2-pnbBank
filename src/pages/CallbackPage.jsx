@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-// Note: two dots (..) to go up from 'pages' to 'src' then into 'config'
-import { handleCallback } from '../config/authConfig'; 
+import { handleCallback } from '../config/authConfig';
 
 const CallbackPage = () => {
   const navigate = useNavigate();

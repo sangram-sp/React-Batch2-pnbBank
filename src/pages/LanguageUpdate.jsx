@@ -32,16 +32,16 @@ const fetchCurrentLanguageAPI = async (serialNumber, token) => {
     if (finalLangRes.ok) {
       const langJson = await finalLangRes.json();
       if (langJson && langJson.ResponseData) {
-          const decryptedLang = decryptResponse(langJson.ResponseData);
-          return decryptedLang?.data?.language || decryptedLang?.data || decryptedLang?.language || 'English';
+        const decryptedLang = decryptResponse(langJson.ResponseData);
+        return decryptedLang?.data?.language || decryptedLang?.data || decryptedLang?.language || 'English';
       } else if (langJson && langJson.data) {
-          return langJson.data.language || langJson.data || 'English';
+        return langJson.data.language || langJson.data || 'English';
       }
     }
     return 'Not Found';
   } catch (err) {
-      console.error("Failed to fetch language data:", err);
-      return 'Error';
+    console.error("Failed to fetch language data:", err);
+    return 'Error';
   }
 };
 
@@ -69,7 +69,7 @@ const LanguageUpdate = () => {
           throw new Error('No VPA ID selected. Please select a VPA from Dashboard first.');
         }
 
-        // 1. Fetch Profile Data to get Serial Number
+        //Fetch Profile Data to get Serial Number
         const profilePayload = { vpa_id: vpaId };
         const encryptedProfilePayload = encryptBody(profilePayload);
 
@@ -98,7 +98,7 @@ const LanguageUpdate = () => {
           throw new Error('Device Serial Number not found for this VPA.');
         }
 
-        // 2. Fetch Current Language
+        //Fetch Current Language
         const fetchedLanguage = await fetchCurrentLanguageAPI(serialNumber, token);
 
         setFormData({
@@ -141,14 +141,13 @@ const LanguageUpdate = () => {
         throw new Error('Failed to update language');
       }
 
-      // Wait briefly for DB consistency, then refetch
-      setFormData(prev => ({...prev, currentLanguage: 'Updating...'}));
+      setFormData(prev => ({ ...prev, currentLanguage: 'Updating...' }));
       const token = sessionStorage.getItem('access_token');
-      
+
       await new Promise(resolve => setTimeout(resolve, 800));
       const updatedLang = await fetchCurrentLanguageAPI(formData.serialNumber, token);
-      
-      setFormData(prev => ({...prev, currentLanguage: updatedLang, languageUpdate: ''}));
+
+      setFormData(prev => ({ ...prev, currentLanguage: updatedLang, languageUpdate: '' }));
       setShowSuccessModal(true);
     } catch (err) {
       console.error(err);
@@ -165,7 +164,7 @@ const LanguageUpdate = () => {
   return (
     <div className="language-update-page">
       <h1 className="page-title">Language Update</h1>
-      
+
       {errorMsg ? (
         <div className="error-message">{errorMsg}</div>
       ) : (
@@ -188,9 +187,9 @@ const LanguageUpdate = () => {
 
             <div className="form-group">
               <label>Language Update</label>
-              <select 
-                value={formData.languageUpdate} 
-                onChange={(e) => setFormData({...formData, languageUpdate: e.target.value})}
+              <select
+                value={formData.languageUpdate}
+                onChange={(e) => setFormData({ ...formData, languageUpdate: e.target.value })}
                 className="select-input"
               >
                 <option value="">Select Language Update</option>
@@ -211,7 +210,7 @@ const LanguageUpdate = () => {
           </div>
 
           <div className="form-actions">
-            <button className="btn-cancel" onClick={() => setFormData({...formData, languageUpdate: ''})}>Cancel</button>
+            <button className="btn-cancel" onClick={() => setFormData({ ...formData, languageUpdate: '' })}>Cancel</button>
             <button className="btn-update" onClick={handleUpdate} disabled={!formData.languageUpdate || updating}>
               {updating ? 'Updating...' : 'Update'}
             </button>
@@ -223,7 +222,7 @@ const LanguageUpdate = () => {
         <div className="success-modal-overlay">
           <div className="success-modal-content">
             <div className="success-modal-title">
-              Language update request<br/>Initiated Successfully
+              Language update request<br />Initiated Successfully
             </div>
             <div className="success-icon-container">
               <div className="success-icon-circle">

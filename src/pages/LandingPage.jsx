@@ -3,7 +3,7 @@ import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import MerchantServices from '../components/sections/MerchantServices';
 import UserVisual from '../components/sections/UserVisual';
-import '../App.css'; // Just one dot-dot here
+import '../App.css';
 
 const LandingPage = () => {
   return (
