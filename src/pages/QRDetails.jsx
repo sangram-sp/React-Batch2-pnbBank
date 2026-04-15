@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { encryptBody, decryptResponse } from '../utils/crypto';
 import { QRCodeSVG } from 'qrcode.react';
 import * as htmlToImage from 'html-to-image';
+import pnbLogo from '../assets/pnb.png';
+import upiLogo from '../assets/UPI-Logo.png';
 import './QRDetails.css';
 
 const QRDetails = () => {
@@ -189,9 +191,7 @@ const QRDetails = () => {
               <div className="qr-printable-area" ref={qrCardRef}>
                 {qrType === 'Static' ? (
                   <div className="qr-header-logo">
-                    <div className="pnb-logo-box">
-                      <span>pnb</span>
-                    </div>
+                    <img src={pnbLogo} alt="PNB Logo" style={{ height: '64px', width: 'auto', maxWidth: '100%', objectFit: 'contain', marginBottom: '12px', display: 'block' }} />
                     <div className="qr-top-vpa">UPI ID : {details.vpaId}</div>
                   </div>
                 ) : (
@@ -208,9 +208,14 @@ const QRDetails = () => {
                   <span>{details.merchantName.toUpperCase()}</span>
                 </div>
 
-                <div className="qr-code-wrapper">
+                <div className="qr-code-wrapper" style={{ display: 'flex', justifyContent: 'center', width: '100%', maxWidth: '220px', margin: '0 auto 16px' }}>
                   {details.qrString ? (
-                    <QRCodeSVG value={getDisplayQrString()} size={240} level={"M"} />
+                    <QRCodeSVG
+                      value={getDisplayQrString()}
+                      size={220}
+                      style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                      level={"M"}
+                    />
                   ) : (
                     <div className="no-qr">No QR string available</div>
                   )}
@@ -223,13 +228,6 @@ const QRDetails = () => {
                     Valid till {formatTime(timerSeconds)}
                   </div>
                 )}
-
-                <div className="qr-branding">
-                  <div className="powered-by">POWERED BY</div>
-                  <div className="upi-logo-text">
-                    <span className="upi-u">U</span><span className="upi-p">P</span><span className="upi-i">I</span>
-                  </div>
-                </div>
               </div>
 
               {qrType === 'Static' && (
@@ -237,6 +235,11 @@ const QRDetails = () => {
                   <button className="btn-download-qr" onClick={handleDownloadQR}>Download QR Code</button>
                 </div>
               )}
+
+              <div className="qr-branding" style={{ marginTop: '24px', width: '100%' }}>
+                <div className="powered-by">POWERED BY</div>
+                <img src={upiLogo} alt="Powered by UPI" style={{ height: '40px', objectFit: 'contain', marginTop: '4px' }} />
+              </div>
             </div>
           )}
         </div>

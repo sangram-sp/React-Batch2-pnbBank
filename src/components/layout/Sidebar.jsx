@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Home, FileText, QrCode, Globe, HelpCircle } from 'lucide-react';
 import './Layout.css';
+import pnbLogo from '../../assets/pnb.png';
 
 const Sidebar = () => {
   const navItems = [
@@ -15,9 +16,7 @@ const Sidebar = () => {
   return (
     <div className="sidebar">
       <div className="sidebar-logo-container">
-        <div className="pnb-logo-mock">
-          <span>pnb</span>
-        </div>
+        <img src={pnbLogo} alt="PNB Logo" style={{ height: '150px', objectFit: 'contain' }} />
       </div>
       <nav className="sidebar-nav">
         {navItems.map((item) => {
@@ -28,7 +27,7 @@ const Sidebar = () => {
               to={item.path}
               className={({ isActive }) => (isActive ? 'nav-item active' : 'nav-item')}
             >
-              <Icon strokeWidth={2} />
+              <Icon size={18} strokeWidth={1.75} />
               {item.label}
             </NavLink>
           );
