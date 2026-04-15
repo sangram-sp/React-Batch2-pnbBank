@@ -19,12 +19,6 @@ const TransactionReports = () => {
     return new Date().toISOString().split('T')[0];
   };
 
-  const getYesterdayString = () => {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    return yesterday.toISOString().split('T')[0];
-  };
-
   const getNextDayString = (dateStr) => {
     if (!dateStr) return '';
     const date = new Date(dateStr);
@@ -47,10 +41,7 @@ const TransactionReports = () => {
     setLoading(true);
     setErrorMsg('');
     try {
-      const vpaId = sessionStorage.getItem('active_vpa');
-      if (!vpaId) {
-        throw new Error('No VPA selected. Please select a VPA from Dashboard first.');
-      }
+      const vpaId = '6291777315m@pnbupi';
 
       const payload = {
         startDate: formatDateForAPI(start),
@@ -59,12 +50,17 @@ const TransactionReports = () => {
         mode: 'both'
       };
 
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+      const token = sessionStorage.getItem('access_token');
+      if (token) {
+        headers['Authorization'] = token;
+      }
+
       const response = await fetch('https://api-dev-stage.iserveu.online/pnb/sb/reports/querysubmit_user', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': sessionStorage.getItem('access_token') || ''
-        },
+        headers: headers,
         body: JSON.stringify(payload)
       });
 
@@ -118,9 +114,7 @@ const TransactionReports = () => {
     }
   }, [filterType]);
 
-  const yesterday = getYesterdayString();
   const today = getTodayString();
-  const minEndDate = getNextDayString(startDate);
 
   // Pagination
   const totalPages = Math.ceil(transactions.length / rowsPerPage);
@@ -211,11 +205,10 @@ const TransactionReports = () => {
                 <input
                   type="date"
                   value={startDate}
-                  max={yesterday}
+                  max={today}
                   onChange={(e) => {
                     setStartDate(e.target.value);
-                    // Reset end date if it's no longer valid
-                    if (endDate && e.target.value >= endDate) {
+                    if (endDate && e.target.value > endDate) {
                       setEndDate('');
                     }
                   }}
@@ -226,7 +219,7 @@ const TransactionReports = () => {
                 <input
                   type="date"
                   value={endDate}
-                  min={minEndDate}
+                  min={startDate}
                   max={today}
                   onChange={(e) => setEndDate(e.target.value)}
                 />
@@ -264,12 +257,12 @@ const TransactionReports = () => {
             <tbody>
               {currentData.length > 0 ? (
                 currentData.map((tx, index) => (
-                  <tr key={tx.id || index}>
+                  <tr key={tx.Transaction_Id || tx.id || index}>
                     <td>{(currentPage - 1) * rowsPerPage + index + 1}</td>
-                    <td>{tx.transaction_id || tx.transactionId || 'N/A'}</td>
-                    <td>{tx.rrn || tx.rrn_number || 'N/A'}</td>
-                    <td>{tx.amount || 'N/A'}</td>
-                    <td>{formatDisplayDate(tx.date || tx.created_at)}</td>
+                    <td>{tx.Transaction_Id || tx.transaction_id || tx.transactionId || 'N/A'}</td>
+                    <td>{tx.RRN || tx.rrn || tx.rrn_number || 'N/A'}</td>
+                    <td>{tx.Transaction_Amount || tx.amount || 'N/A'}</td>
+                    <td>{formatDisplayDate(tx['Date_&_Time'] || tx.date || tx.created_at)}</td>
                     <td><span className={`status-badge ${tx.status?.toLowerCase() || 'received'}`}>{tx.status || 'Received'}</span></td>
                   </tr>
                 ))
