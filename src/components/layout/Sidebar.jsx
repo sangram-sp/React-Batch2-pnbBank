@@ -1,15 +1,15 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, FileText, QrCode, Globe, HelpCircle } from 'lucide-react';
+import { Gauge, FileText, QrCode, Languages, HelpCircle } from 'lucide-react';
 import './Layout.css';
 import pnbLogo from '../../assets/pnb.png';
 
 const Sidebar = () => {
   const navItems = [
-    { path: '/dashboard', label: 'Dashboard', icon: Home },
+    { path: '/dashboard', label: 'Dashboard', icon: Gauge },
     { path: '/reports', label: 'Transaction Reports', icon: FileText },
     { path: '/qr', label: 'QR Details', icon: QrCode },
-    { path: '/language', label: 'Language Update', icon: Globe },
+    { path: '/language', label: 'Language Update', icon: Languages },
     { path: '/help', label: 'Help & Support', icon: HelpCircle },
   ];
 
