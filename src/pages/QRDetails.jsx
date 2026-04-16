@@ -17,6 +17,7 @@ const QRDetails = () => {
   const [errorMsg, setErrorMsg] = useState('');
 
   const [amountInput, setAmountInput] = useState('');
+  const [amountError, setAmountError] = useState('');
   const [activeDynamicAmount, setActiveDynamicAmount] = useState('');
   const [timerSeconds, setTimerSeconds] = useState(90);
 
@@ -94,10 +95,18 @@ const QRDetails = () => {
   }, [qrType, activeDynamicAmount, timerSeconds]);
 
   const handleGenerateDynamic = () => {
-    if (amountInput && !isNaN(amountInput) && Number(amountInput) > 0) {
-      setActiveDynamicAmount(amountInput);
-      setTimerSeconds(90);
+    setAmountError('');
+    const amt = Number(amountInput);
+    if (!amountInput || isNaN(amt) || amt <= 0) {
+      setAmountError('Please enter a valid amount.');
+      return;
     }
+    if (amt > 100000) {
+      setAmountError('Amount cannot exceed ₹1,00,000');
+      return;
+    }
+    setActiveDynamicAmount(amountInput);
+    setTimerSeconds(90);
   };
 
   const formatTime = (seconds) => {
@@ -154,6 +163,7 @@ const QRDetails = () => {
                     setQrType('Static');
                     setActiveDynamicAmount('');
                     setAmountInput('');
+                    setAmountError('');
                   }}
                 />
                 <span>Static</span>
@@ -163,7 +173,10 @@ const QRDetails = () => {
                   type="radio"
                   value="Dynamic"
                   checked={qrType === 'Dynamic'}
-                  onChange={() => setQrType('Dynamic')}
+                  onChange={() => {
+                    setQrType('Dynamic');
+                    setAmountError('');
+                  }}
                 />
                 <span>Dynamic</span>
               </label>
@@ -177,11 +190,15 @@ const QRDetails = () => {
                   <input
                     type="text"
                     value={amountInput}
-                    onChange={(e) => setAmountInput(e.target.value)}
+                    onChange={(e) => {
+                      setAmountInput(e.target.value);
+                      if (amountError) setAmountError('');
+                    }}
                     placeholder="Enter Amount"
                   />
                   <button onClick={handleGenerateDynamic} disabled={!amountInput}>Generate QR</button>
                 </div>
+                {amountError && <div className="amount-error" style={{ color: '#e51d45', fontSize: '12px', marginTop: '8px', fontWeight: '500' }}>{amountError}</div>}
               </div>
             )}
           </div>
